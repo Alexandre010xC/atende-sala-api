@@ -19,8 +19,8 @@ return new class extends Migration
             $table->foreign('professor_id')->references('id')->on('users');
             $table->integer('max_students');
             $table->datetime('started_at');
-            $table->datetime('ended_at');
-            // $table->timestamps();
+            $table->datetime('ended_at')->nullable();
+            $table->timestamps();
         });
     }
 

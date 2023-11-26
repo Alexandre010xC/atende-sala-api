@@ -19,7 +19,7 @@ return new class extends Migration
             $table->datetime('requested_at');
             $table->datetime('started_at');
             $table->datetime('ended_at');
-            // $table->timestamps();
+            $table->timestamps();
         });
     }
 

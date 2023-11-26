@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('student_id');
             $table->foreign('student_id')->references('id')->on('users');
             $table->string('position_seat');
-            // $table->timestamps();
+            $table->timestamps();
         });
     }
 

@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+
+use Illuminate\Support\Str;
+use Carbon\Carbon;
+
+
 use App\Http\Controllers\ProfessorController;
 use App\Http\Controllers\StudentController;
 
-use Carbon\Carbon;
-
-use App\Models\Classroom;
 use App\Models\User;
-use App\Models\Request as Help;
+use App\Models\Classroom;
 use App\Models\StudentsClassroom;
+use App\Models\Request as Help;
 
 class ApiController extends Controller
 {
@@ -19,80 +23,124 @@ class ApiController extends Controller
     public function createClassroom(Request $request)
     {
         $this->validate($request, [
-            'classname' => 'required|string',
-            'layout' => 'required|bool',
+            'user_id' => 'required|integer',
+            'name' => 'required|string',
+            'layout' => 'required|boolean',
             'max_students' => 'required|integer'
         ]);
 
-
         $classroom = new Classroom();
-        $classroom->classname = $request->input('classname');
-        $classroom->layout = $request->input('layout');
-        $classroom->max_students = $request->input('max_students');
+        $classroom->name = $request->get('name');
+        $classroom->layout = $request->get('layout');
+        $classroom->max_students = $request->get('max_students');
         $classroom->started_at = Carbon::now();
 
+        $classroom->professor_id = $request->get('user_id');
         // pegar user_id from session
-        // $classroom->professor_id = $request->input('user_id');
 
-        dd($classroom);
-        $data = $classroom->save();
+        $classroom->save();
 
-
-
-        // ProfessorController::createClassroom();
-
-        return $data;
+        $response = $classroom->refresh();
+        return response()->json($response);
     }
     public function assistNextStudent(Request $request)
     {
         // ProfessorController::assistNextStudent();
-        return 'assistNextStudent';
+        $data = [
+            "data" => [
+                "name" => "Lorem Ipsum0",
+                "seat" => "E3"
+            ]
+        ];
+
+        $response = $data;
+        // $response = 'assistNextStudent';
+        return response()->json($response);
     }
     public function stopAssist(Request $request)
     {
         // ProfessorController::stopAssist();
-        return 'stopAssist';
+        $response = 'stopAssist';
+        return response()->json($response);
     }
     // Student
     public function searchClassroom(Request $request)
     {
         // ProfessorController::searchClassroom();
-        return 'searchClassroom';
+        $response = 'searchClassroom';
+        return response()->json($response);
     }
     public function joinClassroom(Request $request)
     {
         // ProfessorController::joinClassroom();
-        return 'joinClassroom';
+        $response = 'joinClassroom';
+        return response()->json($response);
     }
     public function askAssistance(Request $request)
     {
         // ProfessorController::askAssistance();
-        return 'askAssistance';
+        $response = 'askAssistance';
+        return response()->json($response);
     }
     // Both
-    private function createUser($data)
+    public function manageUser(Request $request)
     {
+        $this->validate($request, [
+            'name' => 'required|string',
+            'is_student' => 'required|boolean',
+            'token' => 'required|unique:users|string|min:32|max:32'
+        ]);
+
+        $response = $request->get('token') != "null" ? $this->loginUser($request) :  $this->registerUser($request);
+
+        return response()->json($response);
+
+
+
+        
+
+        dd(User::find('token',$request->token));
+
+        $token = Str::random(32);
+
+        dd($token);
+
+        $user = new User();
+        $user->name = $request->get('name');
+        $user->name = $request->get('name');
+        dd($user, $request);
+        dd($user->createToken(md5($user->token))->plainTextToken);
+
+        $response = 'user';
+        return response()->json($response);
+    }
+    private function loginUser($data){
 
     }
-    private function updateStatus($data)
-    {
+    private function registerUser($data){
 
+    }
+    public function updateStatus(Request $request)
+    {
+        $response = 'updateStatus';
+        return response()->json($response);
     }
     public function exitClassroom(Request $request)
     {
         // ProfessorController::exit();
         // StudentController::exit();
-        return 'exit';
+        $response = 'exit';
+        return response()->json($response);
     }
     public function listReports(Request $request)
     {
-
-        return 'listReports';
+        $response = 'listReports';
+        return response()->json($response);
     }
     public function getReport(Request $request)
     {
-
-        return 'getReport';
+        $response = 'getReport';
+        return response()->json($response);
     }
 
 }
