@@ -8,7 +8,6 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
-
 use App\Http\Controllers\ProfessorController;
 use App\Http\Controllers\StudentController;
 
@@ -91,34 +90,30 @@ class ApiController extends Controller
             'token' => 'required|unique:users|string|min:32|max:32'
         ]);
 
-        $response = $request->get('token') != "null" ? $this->loginUser($request) :  $this->registerUser($request);
+        $user = $request->get('token') != "null" ? $this->loginUser($request) :  $this->registerUser($request);
 
-        return response()->json($response);
-
-
-
-        
-
-        dd(User::find('token',$request->token));
-
-        $token = Str::random(32);
-
-        dd($token);
-
-        $user = new User();
-        $user->name = $request->get('name');
-        $user->name = $request->get('name');
-        dd($user, $request);
-        dd($user->createToken(md5($user->token))->plainTextToken);
-
-        $response = 'user';
+        $response = ["data" => ["token" => $user->token]];
         return response()->json($response);
     }
     private function loginUser($data){
+        dd(User::find('token',$request->token));
 
+        //autenticar com token e update de "name" na base
+
+        return $user->refresh(); //deve retornar token
     }
     private function registerUser($data){
+        $token = Str::random(32);
 
+        $user = new User();
+        $user->token = $request->get('token');
+        $user->name = $request->get('name');
+        $user->password = bcrypt($request->get('token'));
+
+        Auth::login($user);
+
+        $user->save();
+        return $user->refresh(); //deve retornar token
     }
     public function updateStatus(Request $request)
     {
