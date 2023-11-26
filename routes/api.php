@@ -2,11 +2,11 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Middleware\Cors;
 
 use App\Http\Controllers\ApiController;
 
-Route::middleware(['Cors'])->group(function () {
+// Route::middleware(['Cors'])->group(function () {
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     // Professor Routes
     Route::post('/create-class', [ApiController::class, 'createClassroom']);
     Route::patch('/next', [ApiController::class, 'assistNextStudent']);
