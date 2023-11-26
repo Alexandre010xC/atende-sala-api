@@ -87,7 +87,7 @@ class ApiController extends Controller
         $this->validate($request, [
             'name' => 'required|string',
             'is_student' => 'required|boolean',
-            'token' => 'required|unique:users|string|min:32|max:32'
+            'token' => 'required|unique:users|string'
         ]);
 
         $user = $request->get('token') != "null" ? $this->loginUser($request) :  $this->registerUser($request);
