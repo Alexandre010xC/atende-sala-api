@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ApiController;
 
-Route::middleware(['cors'])->group(function () {
+Route::middleware(['Cors'])->group(function () {
     // Professor Routes
     Route::post('/create-class', [ApiController::class, 'createClassroom']);
     Route::patch('/next', [ApiController::class, 'assistNextStudent']);
